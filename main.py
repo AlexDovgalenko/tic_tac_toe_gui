@@ -10,9 +10,11 @@ class ColorPalette(StrEnum):
     GRAY = "#363434"
     L_GRAY = "#90A4AE"
 
+
 class GameStateEnum(IntEnum):
     RUNNING = auto()
     GAME_OVER = auto()
+
 
 @dataclass
 class Player:
@@ -20,23 +22,26 @@ class Player:
     char: str
     txt_color: "ColorPalette"
 
+
 player_x = Player(name="Player_X", char="X", txt_color=ColorPalette.BLUE)
 player_o = Player(name="Player_O", char="O", txt_color=ColorPalette.RED)
+
 
 # @dataclass
 class GameState:
     def __init__(self):
-
         self.state: "GameStateEnum" = GameStateEnum.RUNNING
         self.current_player: "Player" = player_x
         self.step_number = 0
+
 
 game_state = GameState()
 
 default_color = ColorPalette.GRAY
 default_font = "Consolas"
 
-board = [[0,0,0], [0,0,0], [0,0,0]]
+board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+
 
 def set_tile(row, column, game_state=game_state) -> None:
     if game_state.state == GameStateEnum.GAME_OVER:
@@ -70,6 +75,7 @@ def reset_game() -> None:
     reset_board(board)
     game_state.state = GameStateEnum.RUNNING
 
+
 def check_horizontal(board):
     for row in board:
         if all(element["text"] == row[0]["text"] for element in row) and row[0] is not None:
@@ -77,13 +83,16 @@ def check_horizontal(board):
             return row[0]["text"]
     return None
 
+
 def check_vertical(board):
     for column in range(len(board[0])):
         first_element = board[0][column]["text"]
-        if first_element is not None and all(board[row][column]["text"] == first_element for row in range(1, len(board))):
+        if first_element is not None and all(
+                board[row][column]["text"] == first_element for row in range(1, len(board))):
             print(first_element)
             return first_element
     return None
+
 
 def check_diagonal(board):
     # Check main diagonal (top-left to bottom-right)
@@ -91,8 +100,9 @@ def check_diagonal(board):
     if first_element is not None and all(board[i][i]["text"] == first_element for i in range(1, len(board))):
         return first_element
     # Check anti-diagonal (top-right to bottom-left)
-    first_element = board[0][len(board) - 1]
-    if first_element is not None and all(board[i][len(board) - 1 - i]["text"] == first_element for i in range(1, len(board))):
+    first_element = board[0][len(board) - 1]["text"]
+    if first_element is not None and all(
+            board[i][len(board) - 1 - i]["text"] == first_element for i in range(1, len(board))):
         return first_element
     return None
 
@@ -109,12 +119,17 @@ def check_winner(board):
         return result
     return None
 
+
 def reset_board(board):
     board_dimension = len(board)
     for row in range(board_dimension):
         for column in range(board_dimension):
-            board[row][column] = tkinter.Button(field, text="", font=(default_font, 60, "bold"), background=ColorPalette.RED, foreground=ColorPalette.BLUE, width=4, height=2, command=lambda row=row, column=column: set_tile(row, column, game_state))
-            board[row][column].grid(row=row+1, column=column)
+            board[row][column] = tkinter.Button(field, text="", font=(default_font, 60, "bold"),
+                                                background=ColorPalette.RED, foreground=ColorPalette.BLUE, width=4,
+                                                height=2, command=lambda row=row, column=column: set_tile(row, column,
+                                                                                                          game_state))
+            board[row][column].grid(row=row + 1, column=column)
+
 
 window = tkinter.Tk()
 window.resizable(None, None)
